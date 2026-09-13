@@ -1,0 +1,8 @@
+{
+  "name": "united-trucking-mobile-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {"start": "node tools.mjs serve", "build": "node tools.mjs build", "test": "node --test test/*.test.mjs"},
+  "engines": {"node": ">=22"}
+}
