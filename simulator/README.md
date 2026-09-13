@@ -60,12 +60,22 @@ pure public header syntax: PASS
 
 The syntax check covers the pure public UTSCore headers with `g++ -std=c++17 -Wall -Wextra -Werror -fsyntax-only`. It excludes UE headers that require Unreal's generated-code toolchain.
 
-## Not implemented in P2-01
+## P2-02 session lifecycle
+
+The session increment adds a deterministic in-memory manager for explicitly synthetic development sessions. It handles attempt start, pause/resume, reset requests, completion/abort, and lifecycle records. Connectivity is tracked separately from the active attempt. Exact profile versions must match the resolved configuration before an attempt starts.
+
+See `../docs/P2_02_SESSION_CONTRACT.md` for the scope and transition requirements. Run the configuration and session suites together with `bash simulator/scripts/run_headless_tests.sh`.
+
+Completion is a lifecycle event, not a passing score. Reset records a request and preserves evidence; vehicle movement and pose reset are not wired in this increment. In-memory records do not survive process exit. Windows/Unreal verification remains pending.
+
+Both configuration and session headless suites pass locally. The session core is not yet wrapped by `UUTSSessionSubsystem` or connected to Blueprint/UI. That integration remains required before this component is usable in the Windows shell.
+
+## Scope still pending
 
 Review hardening also tests malformed reloads, duplicate profile versions, snapshot isolation, and missing directories. Failed loads discard all partial profiles; they never expose partially parsed configuration. Duplicate keys and unknown sections are rejected.
 
 The Unreal adapter, generated headers, Windows linking, and packaged profile-file discovery have not been built or tested here. Open the `.uproject` using the chosen compatible Unreal installation, generate project files, and build the Editor target on Windows before treating this scaffold as an executable delivery. No map or packaged application is supplied by this increment.
 
-No session manager, input adapter, exercise manager, telemetry store, scoring engine, vehicle movement, physics, debug HUD, backend client, maps, assets, or validated simulator behavior is implemented here. Those remain later P2+ tasks.
+No input adapter, exercise manager, durable telemetry store, scoring engine, vehicle movement, physics, debug HUD, backend client, maps, assets, or validated simulator behavior is implemented here. Those remain later P2+ tasks.
 
 No value was added to `ground_truth/SIMULATOR_GROUND_TRUTH.md`. Current validated training launch remains unavailable because all human-approved physical, scoring, hardware, and yard values are still TBD.

@@ -9,9 +9,8 @@ mkdir -p "$build_dir"
 g++ -std=c++17 -Wall -Wextra -Werror \
   -I"$simulator_dir/Source/UTSCore/Public" \
   "$simulator_dir/Source/UTSCore/Private/Config/ConfigurationStore.cpp" \
-  "$simulator_dir/Tests/Configuration/configuration_store_tests.cpp" \
-  -o "$build_dir/configuration_store_tests"
+  "$simulator_dir/Source/UTSCore/Private/Session/SessionManager.cpp" \
+  "$simulator_dir/Tests/Session/session_manager_tests.cpp" \
+  -o "$build_dir/session_manager_tests"
 
-"$build_dir/configuration_store_tests" "$simulator_dir/Config/ProfileSets"
-
-bash "$script_dir/run_session_tests.sh"
+"$build_dir/session_manager_tests" "$simulator_dir/Config/ProfileSets"
