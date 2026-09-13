@@ -1,10 +1,10 @@
 # `simulator/` — Windows UE5 Client
 
-Status: Architecture-phase scaffold. No `.uproject` yet — see `docs/UE5_WINDOWS_SHELL_HANDOFF.md` for the Unreal Foundation Engineer's task sequence to create one around the interfaces below.
+Status: P2-01 configuration foundation scaffold. The UE project/module files are present, but this environment does not include UnrealEditor or UnrealBuildTool, so only the headless C++ configuration tests have been run here.
 
 ## What is here now
 
-`Source/UTSCore/Public/UTS/**` — pure abstract-class C++ interface headers for the nine contracts this project's architecture package defines, with no `.cpp`, no physics, no scoring rule, and no measurement:
+`Source/UTSCore/Public/UTS/**` contains the existing pure abstract-class C++ interface headers for the project contracts:
 
 | Path | Interface | Contract doc |
 | --- | --- | --- |
@@ -19,13 +19,53 @@ Status: Architecture-phase scaffold. No `.uproject` yet — see `docs/UE5_WINDOW
 | `Scoring/IScoringEngine.h` | Deterministic, pure scoring function | §8 |
 | `Backend/IBackendSyncClient.h` | Auth/config sync, heartbeat, idempotent upload | §9 |
 
-## What is not here yet
+P2-01 adds:
 
-- `UTSCore.Build.cs`, `.uproject`, the `UTS` game module, any concrete implementation class, any level/map, any physics.
-- Any value from `ground_truth/SIMULATOR_GROUND_TRUTH.md` — every field there is `TBD`; nothing in this folder invents one.
+| Path | Purpose |
+| --- | --- |
+| `UnitedTruckingSimulator.uproject` | Provisional UE5 shell scaffold. `EngineAssociation` is set to `5.3` as an untested baseline because no UE installation is available in this container. |
+| `Source/UnitedTruckingSimulator.Target.cs`, `Source/UnitedTruckingSimulatorEditor.Target.cs` | Game/editor target scaffolding. |
+| `Source/UTSCore/UTSCore.Build.cs` | Runtime core module with C++17 and exceptions enabled for the filesystem/parser path. It has no Slate/UMG/rendering dependencies. |
+| `Source/UTS/UTS.Build.cs` | Minimal primary game module depending on `UTSCore`. |
+| `Source/UTSCore/Public/UTS/Config/ConfigurationStore.h` and `Source/UTSCore/Private/Config/ConfigurationStore.cpp` | Headless deterministic configuration core implementing local profile loading, immutable snapshot access, approval-state lookup, required schema validation, dependency closure validation, and fail-closed validated launch gating. |
+| `Source/UTSCore/Public/UTS/Config/UTSConfigurationSubsystem.h` and `Source/UTSCore/Private/Config/UTSConfigurationSubsystem.cpp` | UE `UGameInstanceSubsystem` adapter around the headless provider. |
+| `Config/ProfileSets/DraftGroundTruthPending/profiles.ini` | Draft profile set with TBD and intentionally omitted fields copied from the current ground-truth absence. It must block validated launch. |
+| `Config/ProfileSets/SyntheticPracticeOnly/profiles.ini` | Synthetic practice/test profile set with round fake values. It is `Draft` plus `SyntheticPracticeOnly`, never human approved. |
+| `Tests/Configuration/configuration_store_tests.cpp` and `scripts/run_headless_tests.sh` | Headless C++ tests for load, immutable snapshot metadata, conservative unknown approval behavior, validated-launch rejection, and separate synthetic-practice readiness. |
 
-## Where to go next
+## P2-01 configuration behavior
 
-- Building the first Windows shell: `docs/UE5_WINDOWS_SHELL_HANDOFF.md`.
-- Why these interfaces look the way they do: `docs/INTERFACE_CONTRACTS.md` and `docs/TECHNICAL_ARCHITECTURE.md` §7.
-- Requirement coverage: `docs/REQUIREMENT_TRACEABILITY_MATRIX.md`.
+`IConfigurationProvider::ValidateForLaunch` is treated only as the validated-attempt gate. In this increment it always fails closed with an explicit diagnostic that validated launch is unavailable until typed approved schemas and real ground-truth verification are implemented. It also reports every currently detectable missing, TBD, unapproved, synthetic, metadata, typed-value, and dependency issue.
+
+Synthetic practice is deliberately separate through `FFileConfigurationProvider::ValidateForMode(..., ELaunchValidationMode::SyntheticPracticeOnly)`, which returns `FConfigurationModeValidationResult::bReadyForRequestedMode`. It does not set `FValidatedConfigSet::bReadyForValidatedLaunch`, and the tests cover that boundary.
+
+Profile payload files do not declare their own required fields. The P2-01 schema lives in `GetRequiredFieldSchema(EProfileType)` plus a required launch dependency set for exercise definitions. This prevents a profile or exercise file from passing validation by omitting requirements.
+
+The current `IConfigurationProvider::GetApprovalState` interface has no `Unknown` value. `FFileConfigurationProvider::GetApprovalState` returns `Draft` for unknown versions as a conservative fail-closed value, and `GetApprovalStateDetailed` exposes whether the profile version was actually found.
+
+## Local verification
+
+Run:
+
+```bash
+simulator/scripts/run_headless_tests.sh
+```
+
+Verified in this container:
+
+```text
+configuration_store_tests: PASS
+pure public header syntax: PASS
+```
+
+The syntax check covers the pure public UTSCore headers with `g++ -std=c++17 -Wall -Wextra -Werror -fsyntax-only`. It excludes UE headers that require Unreal's generated-code toolchain.
+
+## Not implemented in P2-01
+
+Review hardening also tests malformed reloads, duplicate profile versions, snapshot isolation, and missing directories. Failed loads discard all partial profiles; they never expose partially parsed configuration. Duplicate keys and unknown sections are rejected.
+
+The Unreal adapter, generated headers, Windows linking, and packaged profile-file discovery have not been built or tested here. Open the `.uproject` using the chosen compatible Unreal installation, generate project files, and build the Editor target on Windows before treating this scaffold as an executable delivery. No map or packaged application is supplied by this increment.
+
+No session manager, input adapter, exercise manager, telemetry store, scoring engine, vehicle movement, physics, debug HUD, backend client, maps, assets, or validated simulator behavior is implemented here. Those remain later P2+ tasks.
+
+No value was added to `ground_truth/SIMULATOR_GROUND_TRUTH.md`. Current validated training launch remains unavailable because all human-approved physical, scoring, hardware, and yard values are still TBD.

@@ -1,0 +1,22 @@
+{
+  "FileVersion": 3,
+  "EngineAssociation": "5.3",
+  "Category": "Simulation",
+  "Description": "United Trucking Simulator Windows UE5 shell scaffold.",
+  "Modules": [
+    {
+      "Name": "UTSCore",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    },
+    {
+      "Name": "UTS",
+      "Type": "Runtime",
+      "LoadingPhase": "Default",
+      "AdditionalDependencies": [
+        "Engine",
+        "UTSCore"
+      ]
+    }
+  ]
+}
