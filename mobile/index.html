@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#101c28"><title>United Trucking • Backing Lab</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><div class="brand">UT<span>UNITED TRUCKING <small>BACKING LAB · MOBILE PROTOTYPE</small></span></div><button id="history">History</button><button id="help">Controls</button></header>
+<div class="notice">DEVELOPER DEMO · Synthetic geometry · No official scoring</div>
+<main>
+ <section class="yard"><canvas id="scene" aria-label="Overhead view of a synthetic tractor-trailer backing yard"></canvas><div class="yard-title"><span>01 / STRAIGHT-LINE EXPLORATION</span><h1>Find your line.</h1><p>Explore how steering changes trailer direction.</p></div><div class="telemetry"><span id="state">Ready</span><span id="motion">Stopped</span><span id="events">0 boundary entries</span></div></section>
+ <aside><div class="eyebrow">YOUR CONTROLS</div><h2>Take it slow.</h2><p id="hint">Start a demo, then hold a pedal and adjust steering.</p><div class="actions"><button id="start" class="primary">Start demo</button><button id="pause" disabled>Pause</button></div><div class="direction"><button id="reverse" aria-pressed="true">R · Reverse</button><button id="forward" aria-pressed="false">D · Forward</button></div><label for="steer">Steering <output id="steer-value">Centered</output></label><input id="steer" type="range" min="-100" max="100" value="0"><button id="center">Center steering</button><div class="pedals"><button id="brake">BRAKE<small>hold</small></button><button id="throttle">ACCELERATE<small>hold</small></button></div><div class="actions"><button id="reset" disabled>Reset attempt</button><button id="end" disabled>End attempt</button></div><p class="fine">Touch steering stays where you set it. Stop before changing direction. Overhead view is a learning aid.</p></aside>
+</main>
+<div id="message" role="status" aria-live="polite"></div>
+<dialog id="modal"><h2 id="modal-title"></h2><div id="modal-body"></div><div class="actions"><button id="delete-history" hidden>Delete local history</button><button id="close">Close</button></div></dialog>
+<script type="module" src="app.mjs"></script></body></html>
