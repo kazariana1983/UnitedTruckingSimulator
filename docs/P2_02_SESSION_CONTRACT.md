@@ -38,7 +38,7 @@ Only `ResetInPlaceAndKeepPriorSegment` records a reset request in this increment
 
 Timestamps are elapsed seconds from session creation using the injected clock. IDs from the default sequential development generator are only unique for that generator instance; production station-wide identity is deferred. Call the manager on one owning thread and keep its injected configuration provider, clock, and ID generator alive for its lifetime. It is not a distributed lock or a thread-safe shared service.
 
-The pure manager is implemented; `UUTSSessionSubsystem` and Blueprint/UI wiring remain pending. `TryRecoverInterruptedAttempt` returns false without changing state because no durable store is connected. School identity, real student authentication, disk persistence, and upload status remain later integrations.
+The pure manager is implemented. A following source integration provides `UUTSSessionSubsystem` and development HUD/controller wiring; Windows build/runtime verification remains pending (see `UNREAL_SESSION_SHELL_TEST.md`). `TryRecoverInterruptedAttempt` returns false without changing state because no durable store is connected. School identity, real student authentication, disk persistence, and upload status remain later integrations.
 
 Local verification: `bash simulator/scripts/run_headless_tests.sh` passes both configuration and session suites under C++17 with `-Wall -Wextra -Werror`. Tests include legal/illegal transitions, evidence retention, exact-version rejection, unknown/duplicate IDs, synthetic labels, timestamp failures, connectivity failures, and snapshot isolation.
 

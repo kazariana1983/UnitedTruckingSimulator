@@ -5,7 +5,7 @@
 // (docs/SRS_ARCHITECTURE_RECONCILIATION.md §3).
 //
 // P2-02 provides FSessionManager as a pure C++ implementation. The Unreal
-// UUTSSessionSubsystem adapter remains pending; see docs/P2_02_SESSION_CONTRACT.md.
+// UUTSSessionSubsystem adapter is source-integrated; Windows verification is pending.
 
 #pragma once
 

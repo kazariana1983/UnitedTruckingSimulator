@@ -34,6 +34,7 @@ public:
         uint32_t Version) const override;
 
     const UTS::FFileConfigurationProvider& GetProviderForTests() const { return Provider; }
+    const UTS::FFileConfigurationProvider& GetConfigurationProvider() const { return Provider; }
 
 private:
     UTS::FFileConfigurationProvider Provider;
