@@ -15,3 +15,5 @@ g++ -std=c++20 -Wall -Wextra -Werror \
 "$build_dir/configuration_store_tests" "$simulator_dir/Config/ProfileSets"
 
 bash "$script_dir/run_session_tests.sh"
+
+bash "$script_dir/run_motion_tests.sh"

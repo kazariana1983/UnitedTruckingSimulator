@@ -2,7 +2,7 @@
 
 Current build target: Unreal 5.8 (user reports 5.8.2), C++20, BuildSettingsVersion.V7, and Unreal5_8 include order. Updated after the first Windows attempt reported unsupported C++17. Configuration and session headless tests pass under C++20. Unreal/Windows compilation remains unverified; historical P2-01 notes below describe the earlier 5.3 scaffold.
 
-Status: source integration for review. No Windows/Unreal build or screen recording has been produced in this environment. This is a development control screen, not a driving simulator or a validated training session.
+Status: session shell extended by the [synthetic playable yard](PLAYABLE_YARD_TEST.md). Follow that guide for the current tractor/yard controls and Windows checks. This document preserves the earlier session-only verification procedure; no validated training or scoring is implied.
 
 ## Build
 
@@ -16,7 +16,7 @@ From the repository root, in PowerShell:
 
 Replace the example path with the actual engine installation. The script invokes Unreal's build tool for the Development Editor target and stops on a failed build. It does not install prerequisites, package, publish, or launch the project.
 
-Open `simulator/UnitedTruckingSimulator.uproject`. Create/open an empty level for the development shell and use Play in Editor, not Simulate. No binary map or training-yard geometry is supplied by this change. The project default GameMode provides the development HUD/controller; remove any per-level GameMode override that prevents it from running. Click the viewport to give keyboard input focus.
+Open `simulator/UnitedTruckingSimulator.uproject`. Create/open an empty level for the development shell and use Play in Editor, not Simulate. No binary map is supplied. The development GameMode now generates synthetic yard geometry and a tractor during Play. The project default GameMode provides the development HUD/controller; remove any per-level GameMode override that prevents it from running. Click the viewport to give keyboard input focus.
 
 ## Session facade
 
@@ -48,7 +48,7 @@ For a concrete sequence, B → Enter → P → P → R → C should leave a Comp
 - A missing or mismatched profile version in `DefaultGame.ini` blocks attempt start after restarting Play. Restore the checked-in synthetic settings after the test.
 - Restarting Play returns to a fresh development session. Do not describe that as crash recovery or saved history.
 
-No P2/G2 acceptance gate is complete until the required Unreal/Windows evidence is recorded. Real authentication, driving input, vehicle reset, persistent telemetry, scoring, hardware, and launch packaging remain separate work.
+No P2/G2 acceptance gate is complete until the required Unreal/Windows evidence is recorded. The new yard adds synthetic keyboard driving and pose reset. Real authentication, calibrated vehicle behavior, persistent telemetry, scoring, wheel hardware, and launch packaging remain separate work.
 
 ## API references used during integration
 

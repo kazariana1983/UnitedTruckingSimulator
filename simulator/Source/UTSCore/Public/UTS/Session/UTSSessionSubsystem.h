@@ -5,6 +5,8 @@
 #include "UTS/Session/SessionManager.h"
 #include "UTSSessionSubsystem.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FUTSPrototypeResetRequested);
+
 // Development facade only. Synthetic identity and version pins are configured
 // in DefaultGame.ini; this is not a sign-in or validated training interface.
 UCLASS(Config=Game, DefaultConfig)
@@ -12,6 +14,11 @@ class UTSCORE_API UUTSSessionSubsystem final : public UGameInstanceSubsystem
 {
     GENERATED_BODY()
 public:
+    FUTSPrototypeResetRequested OnPrototypeResetRequested;
+
+    UFUNCTION(BlueprintPure, Category="UTS|Development")
+    bool IsAttemptRunning() const;
+
     virtual void Initialize(FSubsystemCollectionBase& Collection) override;
     virtual void Deinitialize() override;
 

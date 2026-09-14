@@ -38,6 +38,7 @@ void UUTSSessionSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 void UUTSSessionSubsystem::Deinitialize()
 {
     // No false persistence or recovery claim when this game instance ends.
+    OnPrototypeResetRequested.Clear();
     Manager.Reset();
     Ids.Reset();
     DisplayAttemptId = {};
@@ -75,13 +76,17 @@ bool UUTSSessionSubsystem::StartSyntheticAttempt()
     const auto Result = Manager->TryBeginSyntheticPracticeAttempt(
         ProfileRef(ExerciseProfileId, ExerciseVersion), ProfileRef(VehicleProfileId, VehicleVersion),
         ProfileRef(TrailerProfileId, TrailerVersion), ProfileRef(ScoringProfileId, ScoringVersion));
-    LastDiagnostic = Result.bSucceeded ? TEXT("Synthetic attempt active; no driving or scoring is connected.") :
+    LastDiagnostic = Result.bSucceeded ? TEXT("Synthetic attempt active; developer tractor enabled. No scoring is connected.") :
         FString(UTF8_TO_TCHAR(Result.DiagnosticMessage.c_str()));
     for (const auto& Missing : Result.MissingFields)
     {
         UE_LOG(LogUTSSession, Warning, TEXT("%s: %s"), UTF8_TO_TCHAR(Missing.FieldPath.c_str()), UTF8_TO_TCHAR(Missing.Reason.c_str()));
     }
-    if (Result.bSucceeded) DisplayAttemptId = Result.Context.AttemptId;
+    if (Result.bSucceeded)
+    {
+        DisplayAttemptId = Result.Context.AttemptId;
+        OnPrototypeResetRequested.Broadcast();
+    }
     return Result.bSucceeded;
 }
 
@@ -95,8 +100,10 @@ bool UUTSSessionSubsystem::ResumeAttempt()
 }
 bool UUTSSessionSubsystem::RequestReset()
 {
-    return RequireManager() && RecordResult(Manager->RequestReset(DisplayAttemptId,
-        UTS::EResetPolicy::ResetInPlaceAndKeepPriorSegment), TEXT("Reset request recorded; no vehicle pose reset is connected."));
+    const bool Accepted = RequireManager() && RecordResult(Manager->RequestReset(DisplayAttemptId,
+        UTS::EResetPolicy::ResetInPlaceAndKeepPriorSegment), TEXT("Reset recorded; developer pose reset requested. Prior events retained."));
+    if (Accepted) OnPrototypeResetRequested.Broadcast();
+    return Accepted;
 }
 bool UUTSSessionSubsystem::CompleteAttempt()
 {
@@ -124,4 +131,9 @@ int32 UUTSSessionSubsystem::GetEventCount() const
 bool UUTSSessionSubsystem::HasActiveAttempt() const
 {
     return Manager && Manager->GetActiveAttemptId().has_value();
+}
+
+bool UUTSSessionSubsystem::IsAttemptRunning() const
+{
+    return Manager && Manager->GetSessionState() == UTS::ESessionState::Active && HasActiveAttempt();
 }
