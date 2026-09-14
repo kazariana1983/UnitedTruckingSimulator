@@ -2,6 +2,8 @@
 
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
+#include "UTS/Development/UTSDevelopmentTractor.h"
 #include "UTS/Session/UTSSessionSubsystem.h"
 
 void AUTSDevelopmentHUD::DrawHUD()
@@ -19,8 +21,9 @@ void AUTSDevelopmentHUD::DrawHUD()
         Y += LineHeight;
     };
 
+    DrawRect(FLinearColor(0.01f, 0.02f, 0.03f, 0.85f), 16, 16, 880, 210);
     DrawStatusLine(TEXT("SYNTHETIC DEVELOPMENT ONLY - NOT VALIDATED TRAINING"), FColor::Yellow);
-    DrawStatusLine(TEXT("Records are memory-only. No driving, scoring, or validated training is connected."), FColor::White);
+    DrawStatusLine(TEXT("Toy tractor + yard. No trailer, collision scoring, or validated vehicle physics. Records stay in memory."), FColor::White);
 
     UGameInstance* GameInstance = GetWorld() ? GetWorld()->GetGameInstance() : nullptr;
     UUTSSessionSubsystem* Session = GameInstance ? GameInstance->GetSubsystem<UUTSSessionSubsystem>() : nullptr;
@@ -35,6 +38,12 @@ void AUTSDevelopmentHUD::DrawHUD()
         Session->HasActiveAttempt() ? TEXT(" (active)") : TEXT("")), FColor::Cyan);
     DrawStatusLine(FString::Printf(TEXT("Events: %d"), Session->GetEventCount()), FColor::Cyan);
     DrawStatusLine(FString::Printf(TEXT("Last: %s"), *Session->GetLastDiagnostic()), FColor(192, 192, 192));
+    if (PlayerOwner)
+    {
+        if (auto* Tractor = Cast<AUTSDevelopmentTractor>(PlayerOwner->GetPawn()))
+            DrawStatusLine(FString::Printf(TEXT("Prototype speed: %.1f m/s"), Tractor->GetPrototypeSpeedMps()), FColor::White);
+    }
+    DrawStatusLine(TEXT("Drive: W forward | S reverse | A/D steer | Space brake | V cab/overhead"), FColor::Green);
     DrawStatusLine(TEXT("Controls: B begin | Enter start | P pause/resume | R reset | C complete | X abort"), FColor::Green);
 #endif
 }

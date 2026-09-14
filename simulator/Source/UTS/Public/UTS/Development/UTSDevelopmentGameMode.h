@@ -11,4 +11,6 @@ class UTS_API AUTSDevelopmentGameMode : public AGameModeBase
 
 public:
     AUTSDevelopmentGameMode();
+    virtual void StartPlay() override;
+    virtual void RestartPlayer(AController* NewPlayer) override;
 };
