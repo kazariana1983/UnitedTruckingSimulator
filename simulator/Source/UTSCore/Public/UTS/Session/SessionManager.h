@@ -1,6 +1,6 @@
 // P2-02 deterministic session manager implementation support.
 //
-// This is the headless-testable core intended for a future Unreal subsystem
+// This is the headless-testable core used by the Unreal subsystem
 // adapter. It deliberately admits only explicitly labeled synthetic practice
 // sessions in this increment. Validated/evaluation attempts continue to fail
 // closed through the configuration gate until human-approved ground truth and

@@ -68,7 +68,7 @@ See `../docs/P2_02_SESSION_CONTRACT.md` for the scope and transition requirement
 
 Completion is a lifecycle event, not a passing score. Reset records a request and preserves evidence; vehicle movement and pose reset are not wired in this increment. In-memory records do not survive process exit. Windows/Unreal verification remains pending.
 
-Both configuration and session headless suites pass locally. The session core is not yet wrapped by `UUTSSessionSubsystem` or connected to Blueprint/UI. That integration remains required before this component is usable in the Windows shell.
+Both configuration and session headless suites pass locally. `UUTSSessionSubsystem` now wraps the session core and exposes synthetic development commands to Blueprint and the development HUD/controller. The integration is source-only until it is built and exercised with Unreal on Windows; see `../docs/UNREAL_SESSION_SHELL_TEST.md` and `scripts/build_windows_editor.ps1`.
 
 ## Scope still pending
 
