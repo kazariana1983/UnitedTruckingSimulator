@@ -1,15 +1,17 @@
 # Unreal session shell: Windows verification
 
+Current build target: Unreal 5.8 (user reports 5.8.2), C++20, BuildSettingsVersion.V7, and Unreal5_8 include order. Updated after the first Windows attempt reported unsupported C++17. Configuration and session headless tests pass under C++20. Unreal/Windows compilation remains unverified; historical P2-01 notes below describe the earlier 5.3 scaffold.
+
 Status: source integration for review. No Windows/Unreal build or screen recording has been produced in this environment. This is a development control screen, not a driving simulator or a validated training session.
 
 ## Build
 
-Use a Windows development machine with the selected Unreal Engine installation and its compatible C++ toolchain installed. The project's `EngineAssociation` remains the provisional `5.3` baseline. Do not infer compatibility with another version from the headless Linux tests.
+Use a Windows development machine with the selected Unreal Engine installation and its compatible C++ toolchain installed. The project's `EngineAssociation` is now `5.8`. Do not infer compatibility with another version from the headless Linux tests.
 
 From the repository root, in PowerShell:
 
 ```powershell
-.\simulator\scripts\build_windows_editor.ps1 -UnrealRoot 'C:\Program Files\Epic Games\UE_5.3'
+.\simulator\scripts\build_windows_editor.ps1 -UnrealRoot 'C:\Program Files\Epic Games\UE_5.8'
 ```
 
 Replace the example path with the actual engine installation. The script invokes Unreal's build tool for the Development Editor target and stops on a failed build. It does not install prerequisites, package, publish, or launch the project.

@@ -1,5 +1,7 @@
 # `simulator/` — Windows UE5 Client
 
+Current build target: Unreal 5.8 (user reports 5.8.2), C++20, BuildSettingsVersion.V7, and Unreal5_8 include order. Updated after the first Windows attempt reported unsupported C++17. Configuration and session headless tests pass under C++20. Unreal/Windows compilation remains unverified; historical P2-01 notes below describe the earlier 5.3 scaffold.
+
 Status: P2-01 configuration foundation scaffold. The UE project/module files are present, but this environment does not include UnrealEditor or UnrealBuildTool, so only the headless C++ configuration tests have been run here.
 
 ## What is here now

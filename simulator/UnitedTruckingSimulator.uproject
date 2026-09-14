@@ -1,6 +1,6 @@
 {
   "FileVersion": 3,
-  "EngineAssociation": "5.3",
+  "EngineAssociation": "5.8",
   "Category": "Simulation",
   "Description": "United Trucking Simulator Windows UE5 shell scaffold.",
   "Modules": [
